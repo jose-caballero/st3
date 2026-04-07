@@ -27,6 +27,7 @@
             <table class="table table-hover align-middle">
                 <thead>
                     <tr>
+                        <th scope="col">Name</th>
                         <th scope="col" class="w-50">Description</th>
                         <th scope="col">Status</th>
                         <th scope="col" class="text-end">Link</th>
@@ -35,6 +36,7 @@
                 <tbody>
                     {% for entry in entries %}
                     <tr>
+                        <td class="text-dark">{{ entry.name}}</td>
                         <td class="text-dark">{{ entry.description }}</td>
                         <td>
                             {% if entry.enabled %}
