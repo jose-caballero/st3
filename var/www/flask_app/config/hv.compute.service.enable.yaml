@@ -3,6 +3,8 @@ description: Enables the nova compute service on a hypervisor
 enabled: true
 entry_point: src/openstack_actions.py
 name: hv.compute.service.enable
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

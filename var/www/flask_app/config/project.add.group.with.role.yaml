@@ -3,6 +3,8 @@ description: Add a pre-created group to a given project with given role
 enabled: true
 entry_point: src/openstack_actions.py
 name: project.add.group.with.role
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: apis.openstack_api.openstack_roles.assign_group_role_to_project

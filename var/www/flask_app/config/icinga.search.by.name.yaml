@@ -3,6 +3,8 @@ description: Search Icinga for Hosts/Services in a given state
 enabled: true
 entry_point: src/openstack_actions.py
 name: icinga.search.by.name
+groups:
+  - stfc-cloud/admins
 parameters:
   object_type:
     immutable: false

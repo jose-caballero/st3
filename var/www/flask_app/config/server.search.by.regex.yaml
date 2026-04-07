@@ -3,6 +3,8 @@ description: Search for servers property using regex pattern, or not matching gi
 enabled: true
 entry_point: src/openstack_actions.py
 name: server.search.by.regex
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

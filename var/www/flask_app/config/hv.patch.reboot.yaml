@@ -3,6 +3,8 @@ description: Patch and Reboot a hypervisor
 enabled: true
 entry_point: src/openstack_actions.py
 name: hv.patch.reboot
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     type: string

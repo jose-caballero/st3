@@ -3,6 +3,8 @@ description: Check for routers with gateway address on the internal network
 enabled: true
 entry_point: src/openstack_actions.py
 name: check.internal.router.gateways
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: apis.openstack_api.openstack_router.check_for_internal_routers

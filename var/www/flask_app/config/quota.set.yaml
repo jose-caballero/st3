@@ -3,6 +3,8 @@ description: Set quota for project
 enabled: true
 entry_point: src/openstack_actions.py
 name: quota.set
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: workflows.quota_actions.quota_set

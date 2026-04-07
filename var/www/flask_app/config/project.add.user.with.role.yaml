@@ -3,6 +3,8 @@ description: Add a User directly to a project with a given role
 enabled: true
 entry_point: src/openstack_actions.py
 name: project.add.user.with.role
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: workflows.role_actions.role_add

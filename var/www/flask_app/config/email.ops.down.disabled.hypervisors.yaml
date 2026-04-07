@@ -3,6 +3,8 @@ description: Sends an email about down and disabled hypervisors
 enabled: true
 entry_point: src/openstack_actions.py
 name: email.ops.down.disabled.hypervisors
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

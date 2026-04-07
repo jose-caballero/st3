@@ -5,6 +5,8 @@ description: Adds a user directly to an existing group
 enabled: true
 entry_point: src/openstack_actions.py
 name: group.add.user
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: apis.openstack_api.openstack_roles.add_user_to_group

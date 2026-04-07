@@ -3,6 +3,8 @@ description: Search for hypervisors using regex pattern, or not matching given v
 enabled: true
 entry_point: src/openstack_actions.py
 name: hv.search.by.regex
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

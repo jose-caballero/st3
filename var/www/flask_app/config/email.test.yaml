@@ -3,6 +3,8 @@ description: Sends a test email
 enabled: true
 entry_point: src/openstack_actions.py
 name: email.test
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

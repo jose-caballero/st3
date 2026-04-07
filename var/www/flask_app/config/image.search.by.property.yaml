@@ -3,6 +3,8 @@ description: Search for images with a selected property matching, or not matchin
 enabled: true
 entry_point: src/openstack_actions.py
 name: image.search.by.property
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

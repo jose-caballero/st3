@@ -3,6 +3,8 @@ description: Search for image property using regex pattern, or not matching give
 enabled: true
 entry_point: src/openstack_actions.py
 name: image.search.by.regex
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

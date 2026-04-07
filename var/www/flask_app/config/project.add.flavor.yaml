@@ -3,6 +3,8 @@ description: Add an existing flavor to a project
 enabled: true
 entry_point: src/openstack_actions.py
 name: project.add.flavor
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: apis.openstack_api.openstack_project.add_flavor_to_project

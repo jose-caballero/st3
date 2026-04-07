@@ -3,6 +3,8 @@ description: Post reboot action
 enabled: true
 entry_point: src/openstack_actions.py
 name: hv.post.reboot
+groups:
+  - stfc-cloud/admins
 parameters:
   hypervisor_hostname:
     type: string

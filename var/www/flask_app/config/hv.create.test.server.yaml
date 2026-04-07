@@ -3,6 +3,8 @@ description: Build a test server on a given hypervisor, can optionally test all 
 enabled: true
 entry_point: src/openstack_actions.py
 name: hv.create.test.server
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

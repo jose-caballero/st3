@@ -3,6 +3,8 @@ description: Share an image to a project
 enabled: true
 entry_point: src/openstack_actions.py
 name: image.share.to.project
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

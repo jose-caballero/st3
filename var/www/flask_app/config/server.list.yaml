@@ -3,6 +3,8 @@ description: List all servers
 enabled: true
 entry_point: src/openstack_actions.py
 name: server.list
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

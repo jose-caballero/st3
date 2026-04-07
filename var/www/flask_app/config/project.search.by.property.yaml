@@ -3,6 +3,8 @@ description: Search for project with a selected property matching, or not matchi
 enabled: true
 entry_point: src/openstack_actions.py
 name: project.search.by.property
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

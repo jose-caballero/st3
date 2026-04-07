@@ -3,6 +3,8 @@ description: Show the current quota for project
 enabled: false
 entry_point: src/openstack_actions.py
 name: quota.show
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: apis.openstack_api.openstack_quota.quota_show

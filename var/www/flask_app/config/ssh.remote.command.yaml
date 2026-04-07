@@ -3,6 +3,8 @@ description: Execute command on a remote host
 enabled: true
 entry_point: src/openstack_actions.py
 name: ssh.remote.command
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

@@ -3,6 +3,8 @@ description: Sends an email to inform users that new CAPI Images have been relea
 enabled: true
 entry_point: src/openstack_actions.py
 name: email.mailing.list.with.create.capi.images
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

@@ -3,6 +3,8 @@ description: Create a test jira task
 enabled: true
 entry_point: src/openstack_actions.py
 name: jira.create_test_issue
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

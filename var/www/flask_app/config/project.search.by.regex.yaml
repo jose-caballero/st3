@@ -3,6 +3,8 @@ description: Search for projects using regex pattern.
 enabled: true
 entry_point: src/openstack_actions.py
 name: project.search.by.regex
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

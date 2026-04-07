@@ -3,6 +3,8 @@ description: Disables the nova compute service on a hypervisor
 enabled: true
 entry_point: src/openstack_actions.py
 name: hv.compute.service.disable
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

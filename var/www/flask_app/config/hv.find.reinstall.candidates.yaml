@@ -3,6 +3,8 @@ description: Find good candidates for hypervisor reinstall
 enabled: true
 entry_point: src/openstack_actions.py
 name: hv.find.reinstall.candidates
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

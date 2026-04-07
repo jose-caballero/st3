@@ -3,6 +3,8 @@ description: Removes a role from a user's project permissions
 enabled: true
 entry_point: src/openstack_actions.py
 name: project.remove.user.role
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: workflows.role_actions.role_remove

@@ -3,6 +3,8 @@ description: Create a new server
 enabled: true
 entry_point: src/openstack_actions.py
 name: server.create
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

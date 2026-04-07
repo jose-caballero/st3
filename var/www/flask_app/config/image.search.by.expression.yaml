@@ -3,6 +3,8 @@ description: Search for images with a selected expression
 enabled: true
 entry_point: src/openstack_actions.py
 name: image.search.by.expression
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

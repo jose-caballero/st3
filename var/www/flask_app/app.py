@@ -19,6 +19,13 @@ def get_oidc_user_info():
 
     # Get the groups claim
     raw_groups = request.environ.get('OIDC_CLAIM_groups', '')
+    
+    ### BEGIN TEST ###
+    #f = open("/var/www/flask_app/iam", 'w')
+    #for k,v in request.environ.items():
+    #    f.write(f'{k} = {v} \n')
+    ### END TEST ###
+
 
     groups = []
     if raw_groups:
@@ -56,27 +63,49 @@ load_configs()
 def debug_auth():
     """Returns all OIDC related environment variables for troubleshooting."""
     oidc_vars = {k: v for k, v in request.environ.items() if k.startswith('OIDC_') or k == 'REMOTE_USER'}
-    return render_template('form.html',
-                           action_name="Auth Debug",
+    return render_template('form.html', 
+                           action_name="Auth Debug", 
                            description="Listing OIDC Environment Variables",
-                           params={},
+                           params={}, 
                            result={"status": "info", "message": "Check the payload below", "received_payload": oidc_vars})
+
+
+def filter_app_data(user):
+    user_groups = user["groups"]
+    out = []
+    for data in app_data:
+        data_groups = data["groups"]
+        if set(user_groups).intersection(set(data_groups)):
+            out.append(data)
+    return out
+
+
+def authorised_form(user, data):
+    user_groups = user["groups"]
+    data_groups = data["groups"]
+    return set(user_groups).intersection(set(data_groups)) != set()
 
 @app.route('/')
 def index():
     user = get_oidc_user_info()
-    return render_template('index.html', entries=app_data, user=user)
+    app_data_filtered = filter_app_data(user)
+    ##return render_template('index.html', entries=app_data, user=user)
+    return render_template('index.html', entries=app_data_filtered, user=user)
 
 @app.route('/form/<action_name>', methods=['GET', 'POST'])
 def action_form(action_name):
     user = get_oidc_user_info()
     yaml_path = os.path.join(CONFIG_DIR, f"{action_name}.yaml")
-
+    
     if not os.path.exists(yaml_path):
         abort(404)
 
     with open(yaml_path, 'r') as f:
         metadata = yaml.safe_load(f)
+   
+    authorised = authorised_form(user, metadata)
+    if not authorised:
+        return "You do not have required authorisations for this action"
 
     params = metadata.get('parameters', {})
     result = None
@@ -86,7 +115,7 @@ def action_form(action_name):
             from run import run
             # You can now pass user info into your run script for auditing!
             payload = cast_types(request.form, params)
-            payload['_triggered_by'] = user['username']
+            payload['_triggered_by'] = user['username'] 
             result = run(payload)
         except Exception as e:
             result = {"status": "error", "message": str(e)}

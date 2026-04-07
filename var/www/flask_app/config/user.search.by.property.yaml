@@ -3,6 +3,8 @@ description: Search for user with a selected property matching, or not matching 
 enabled: true
 entry_point: src/openstack_actions.py
 name: user.search.by.property
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

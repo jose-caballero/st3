@@ -3,6 +3,8 @@ description: Sends an email to inform users that they have VMs running on flavor
 enabled: true
 entry_point: src/openstack_actions.py
 name: email.users.with.decom.flavors
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

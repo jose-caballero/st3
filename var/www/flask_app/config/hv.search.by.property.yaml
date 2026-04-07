@@ -3,6 +3,8 @@ description: Search for hypervisors with a selected property matching, or not ma
 enabled: true
 entry_point: src/openstack_actions.py
 name: hv.search.by.property
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400

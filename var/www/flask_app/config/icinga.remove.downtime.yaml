@@ -3,6 +3,8 @@ description: Remove a downtime for Host or Service in Icinga
 enabled: true
 entry_point: src/openstack_actions.py
 name: icinga.remove.downtime
+groups:
+  - stfc-cloud/admins
 parameters:
   name:
     type: string

@@ -3,6 +3,8 @@ description: Creates a new Project in OpenStack. This requires an associated JIR
 enabled: true
 entry_point: src/openstack_actions.py
 name: jira.request_new_project
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     type: string

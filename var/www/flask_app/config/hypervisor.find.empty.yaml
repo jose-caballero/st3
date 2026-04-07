@@ -3,6 +3,8 @@ description: Common Queries about Hypervisors
 enabled: true
 entry_point: src/openstack_actions.py
 name: hypervisor.find.empty
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: workflows.find_empty_hypervisors.find_empty_hypervisors

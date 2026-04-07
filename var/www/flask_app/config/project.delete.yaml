@@ -3,6 +3,8 @@ description: Delete Openstack Project
 enabled: true
 entry_point: src/openstack_actions.py
 name: project.delete
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: workflows.project_actions.delete_project

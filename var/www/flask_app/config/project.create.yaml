@@ -3,6 +3,8 @@ description: Create openstack project
 enabled: true
 entry_point: src/openstack_actions.py
 name: project.create
+groups:
+  - stfc-cloud/admins
 parameters:
   lib_entry_point:
     default: workflows.create_project.create_project

@@ -3,6 +3,8 @@ description: Query servers based on a datetime property (e.g. created-at or last
 enabled: true
 entry_point: src/openstack_actions.py
 name: server.search.by.datetime
+groups:
+  - stfc-cloud/admins
 parameters:
   timeout:
     default: 5400
