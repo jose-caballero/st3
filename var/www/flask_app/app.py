@@ -3,60 +3,14 @@ import glob
 import yaml
 import json
 from flask import Flask, render_template, abort, request
+from flask.views import MethodView
+
+from base import FlaskAppBase
+from indexview import IndexView
+from actionview import ActionFormView
 
 app = Flask(__name__)
-CONFIG_DIR = '/var/www/flask_app/config/'
-app_data = []
 
-def get_oidc_user_info():
-    """
-    Extracts identity data provided by 'OIDCPassIDTokenAs claims'.
-    """
-    # REMOTE_USER is the standard set by mod_auth_openidc
-    username = request.environ.get('REMOTE_USER') or \
-               request.environ.get('OIDC_CLAIM_preferred_username') or \
-               'unknown_user'
-
-    # Get the groups claim
-    raw_groups = request.environ.get('OIDC_CLAIM_groups', '')
-    
-    ### BEGIN TEST ###
-    #f = open("/var/www/flask_app/iam", 'w')
-    #for k,v in request.environ.items():
-    #    f.write(f'{k} = {v} \n')
-    ### END TEST ###
-
-
-    groups = []
-    if raw_groups:
-        # If the IAM sends a JSON-style list (["a", "b"])
-        if raw_groups.startswith('['):
-            try:
-                import json
-                groups = json.loads(raw_groups)
-            except:
-                groups = [g.strip() for g in raw_groups.split(',')]
-        else:
-            # If the IAM sends a comma-separated string
-            groups = [g.strip() for g in raw_groups.split(',') if g.strip()]
-    return {"username": username, "groups": groups}
-
-
-def load_configs():
-    global app_data
-    app_data = []
-    yaml_files = glob.glob(os.path.join(CONFIG_DIR, "*.yaml"))
-    for filepath in yaml_files:
-        filename = os.path.basename(filepath)
-        try:
-            with open(filepath, 'r') as f:
-                data = yaml.safe_load(f)
-                data['filename'] = filename
-                app_data.append(data)
-        except Exception as e:
-            app.logger.error(f"Error loading {filename}: {e}")
-
-load_configs()
 
 # --- DEBUG ROUTE ---
 @app.route('/debug-auth')
@@ -70,90 +24,13 @@ def debug_auth():
                            result={"status": "info", "message": "Check the payload below", "received_payload": oidc_vars})
 
 
-def filter_app_data(user):
-    user_groups = user["groups"]
-    out = []
-    for data in app_data:
-        data_groups = data["groups"]
-        if set(user_groups).intersection(set(data_groups)):
-            out.append(data)
-    return out
+# ============================================================================== 
+# register the routes
+# ============================================================================== 
+app.add_url_rule('/form/<action_name>', view_func=ActionFormView.as_view('action_form'))
+app.add_url_rule('/', view_func=IndexView.as_view('index'))
 
 
-def authorised_form(user, data):
-    user_groups = user["groups"]
-    data_groups = data["groups"]
-    return set(user_groups).intersection(set(data_groups)) != set()
-
-@app.route('/')
-def index():
-    user = get_oidc_user_info()
-    app_data_filtered = filter_app_data(user)
-    ##return render_template('index.html', entries=app_data, user=user)
-    return render_template('index.html', entries=app_data_filtered, user=user)
-
-@app.route('/form/<action_name>', methods=['GET', 'POST'])
-def action_form(action_name):
-    user = get_oidc_user_info()
-    yaml_path = os.path.join(CONFIG_DIR, f"{action_name}.yaml")
-    
-    if not os.path.exists(yaml_path):
-        abort(404)
-
-    with open(yaml_path, 'r') as f:
-        metadata = yaml.safe_load(f)
-   
-    authorised = authorised_form(user, metadata)
-    if not authorised:
-        return "You do not have required authorisations for this action"
-
-    params = metadata.get('parameters', {})
-    result = None
-
-    if request.method == 'POST':
-        try:
-            from run import run
-            # You can now pass user info into your run script for auditing!
-            payload = cast_types(request.form, params)
-            payload['_triggered_by'] = user['username'] 
-            result = run(payload)
-        except Exception as e:
-            result = {"status": "error", "message": str(e)}
-
-    ### BEGIN TEST ###
-    return render_template('form.html',
-                           action_name=metadata.get('name', action_name),
-                           description=metadata.get('description', ''),
-                           params=params,
-                           result=result,
-                           user=user)
-
-    #result_html = "<h1>Success!</h1><p>This was rendered <strong>as is</strong>.</p>"
-    #return render_template('form.html',
-    #                       action_name=metadata.get('name', action_name),
-    #                       description=metadata.get('description', ''),
-    #                       params=params,
-    #                       result=result,
-    #                       result_html=result_html,
-    #                       user=user)
-    ### END TEST ###
-
-def cast_types(form_data, params_metadata):
-    casted_data = {}
-    for key, meta in params_metadata.items():
-        val = form_data.get(key)
-        if meta.get('type') == 'boolean':
-            casted_data[key] = True if val == 'on' else False
-        elif meta.get('type') == 'integer' and val:
-            try: casted_data[key] = int(val)
-            except: casted_data[key] = val
-        elif meta.get('type') == 'array' and val:
-            casted_data[key] = [i.strip() for i in val.split(',')]
-        elif val == '' and not meta.get('required'):
-            casted_data[key] = meta.get('default')
-        else:
-            casted_data[key] = val
-    return casted_data
 
 if __name__ == '__main__':
     app.run()
