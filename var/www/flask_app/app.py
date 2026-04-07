@@ -107,6 +107,8 @@ def cast_types(form_data, params_metadata):
         elif meta.get('type') == 'integer' and val:
             try: casted_data[key] = int(val)
             except: casted_data[key] = val
+        elif meta.get('type') == 'array' and val:
+            casted_data[key] = [i.strip() for i in val.split(',')]
         elif val == '' and not meta.get('required'):
             casted_data[key] = meta.get('default')
         else:
