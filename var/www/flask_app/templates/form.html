@@ -31,6 +31,7 @@
     </div>
     {% endif %}
 
+
     {% if result %}
     <div class="row justify-content-center mb-4">
         <div class="col-lg-8">
@@ -89,11 +90,10 @@
                             {% else %}
                                 <input type="text" class="form-control" id="{{ key }}" name="{{ key }}" 
                                        value="{{ meta.default if meta.default is not none else '' }}"
-                                       placeholder="{{ meta.description or '' }}"
                                        {% if meta.required %}required{% endif %}>
                             {% endif %}
 
-                            {% if meta.description and meta.type != 'boolean' %}
+                            {% if meta.description %}
                                 <div class="form-text" style="white-space: pre-line;">{{ meta.description }}</div>
                             {% endif %}
                         </div>
