@@ -91,12 +91,23 @@ def action_form(action_name):
         except Exception as e:
             result = {"status": "error", "message": str(e)}
 
+    ### BEGIN TEST ###
     return render_template('form.html',
                            action_name=metadata.get('name', action_name),
                            description=metadata.get('description', ''),
                            params=params,
                            result=result,
                            user=user)
+
+    #result_html = "<h1>Success!</h1><p>This was rendered <strong>as is</strong>.</p>"
+    #return render_template('form.html',
+    #                       action_name=metadata.get('name', action_name),
+    #                       description=metadata.get('description', ''),
+    #                       params=params,
+    #                       result=result,
+    #                       result_html=result_html,
+    #                       user=user)
+    ### END TEST ###
 
 def cast_types(form_data, params_metadata):
     casted_data = {}
