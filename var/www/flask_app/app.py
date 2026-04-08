@@ -8,6 +8,7 @@ from flask.views import MethodView
 from base import FlaskAppBase
 from indexview import IndexView
 from actionview import ActionFormView
+from historyview import HistoryView
 
 app = Flask(__name__)
 
@@ -29,7 +30,7 @@ def debug_auth():
 # ============================================================================== 
 app.add_url_rule('/form/<action_name>', view_func=ActionFormView.as_view('action_form'))
 app.add_url_rule('/', view_func=IndexView.as_view('index'))
-
+app.add_url_rule('/history', view_func=HistoryView.as_view('history'))
 
 
 if __name__ == '__main__':
