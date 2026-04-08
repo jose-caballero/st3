@@ -1,0 +1,13 @@
+
+For the requests in the filesystem:
+
+    # cd /var/www/flask_app
+    # mkdir requests
+    # mkdir requests/idle
+    # mkdir requests/queued
+    # mkdir requests/running
+    # mkdir requests/done
+    # mkdir requests/error
+    # chown apache:apache requests
+    # chown apache:apache requests/*
+
