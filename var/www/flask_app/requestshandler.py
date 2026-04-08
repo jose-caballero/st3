@@ -1,0 +1,130 @@
+import json
+from datetime import datetime
+import uuid
+import os 
+
+class RequestHandler:
+
+    def __init__(self, request_id=None):
+        if not request_id:
+            self.request_id = str(uuid.uuid1())
+        else:
+            self.request_id = request_id
+
+    def create(self, action_name, payload, user):
+        """
+        :param payload: JSON doc
+        """
+        data = {}
+        data["request_id"] = self.request_id
+        data["status"] = "idle"
+        data["creation_time"] = datetime.utcnow().isoformat()
+        data["action"] = action_name
+        data["user"] = user
+        data["payload"] = payload
+
+        f = open(f"/var/www/flask_app/requests/idle/{self.request_id}","w")
+        json.dump(data, f)
+
+
+    def set_queued(self):
+        idle_filename = f"/var/www/flask_app/requests/idle/{self.request_id}"
+        data = json.load(open(idle_filename))
+        data['queued_time'] = datetime.utcnow().isoformat()
+        data['status'] = 'queued'
+        queued_filename = f"/var/www/flask_app/requests/queued/{self.request_id}"
+        json.dump(data, open(queued_filename, "w"))
+        os.remove(idle_filename)
+
+    def set_running(self):
+        idle_filename = f"/var/www/flask_app/requests/queued/{self.request_id}"
+        data = json.load(open(idle_filename))
+        data['running_time'] = datetime.utcnow().isoformat()
+        data['status'] = 'running'
+        queued_filename = f"/var/www/flask_app/requests/running/{self.request_id}"
+        json.dump(data, open(queued_filename, "w"))
+        os.remove(idle_filename)
+
+    def set_done(self):
+        idle_filename = f"/var/www/flask_app/requests/running/{self.request_id}"
+        data = json.load(open(idle_filename))
+        data['done_time'] = datetime.utcnow().isoformat()
+        data['status'] = 'done'
+        queued_filename = f"/var/www/flask_app/requests/running/{self.request_id}"
+        queued_filename = f"/var/www/flask_app/requests/done/{self.request_id}"
+        json.dump(data, open(queued_filename, "w"))
+        os.remove(idle_filename)
+
+    def set_error(self):
+        idle_filename = f"/var/www/flask_app/requests/running/{self.request_id}"
+        data = json.load(open(idle_filename))
+        data['error_time'] = datetime.utcnow().isoformat()
+        data['status'] = 'error'
+        queued_filename = f"/var/www/flask_app/requests/error/{self.request_id}"
+        json.dump(data, open(queued_filename, "w"))
+        os.remove(idle_filename)
+
+
+class RequestHandlerList(list):
+
+    def add(self, request_id):
+        self.append(RequestHandler(request_id))
+
+    def set_queued(self):
+        for req in self.__iter__():
+            req.set_queued()
+
+    def set_running(self):
+        for req in self.__iter__():
+            req.set_running()
+
+    def set_done(self):
+        for req in self.__iter__():
+            req.set_done()
+
+    def set_error(self):
+        for req in self.__iter__():
+            req.set_error()
+
+
+class RequestsManager:
+
+    def get_idle(self):
+        req_l = RequestHandlerList()
+        for req_id in os.listdir('/var/www/flask_app/requests/idle'):
+            req_l.add(req_id)
+        return req_l
+
+    def get_queued(self):
+        req_l = RequestHandlerList()
+        for req_id in os.listdir('/var/www/flask_app/requests/queued'):
+            req_l.add(req_id)
+        return req_l
+
+    def get_running(self):
+        req_l = RequestHandlerList()
+        for req_id in os.listdir('/var/www/flask_app/requests/running'):
+            req_l.add(req_id)
+        return req_l
+
+    def get_done(self):
+        req_l = RequestHandlerList()
+        for req_id in os.listdir('/var/www/flask_app/requests/done'):
+            req_l.add(req_id)
+        return req_l
+
+    def get_error(self):
+        req_l = RequestHandlerList()
+        for req_id in os.listdir('/var/www/flask_app/requests/error'):
+            req_l.add(req_id)
+        return req_l
+
+    def get_all(self):
+        req_l = RequestHandlerList()
+        req_l += self.get_idle()
+        req_l += self.get_queued()
+        req_l += self.get_running()
+        req_l += self.get_done()
+        req_l += self.get_error()
+        return req_l
+

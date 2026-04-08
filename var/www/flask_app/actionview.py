@@ -1,5 +1,6 @@
 from flask import render_template, abort, request
 from base import FlaskAppBase
+from requestshandler import RequestHandler
 import os
 import yaml
 
@@ -74,12 +75,24 @@ class ActionFormView(FlaskAppBase):
         params = self.metadata.get('parameters', {})
         result = None
 
+
         try:
             from run import run
             # Handle payload and auditing
             payload = cast_types(request.form, params)
-            payload['_triggered_by'] = self.user['username']
+            #payload['_triggered_by'] = self.user['username']
             result = run(payload)
+
+
+            action_name = self.metadata.get('name', action_name)
+            username = self.user['username']
+            req = RequestHandler()
+            req.create(action_name, payload, username)
+
+
+
+
+
         except Exception as e:
             result = {"status": "error", "message": str(e)}
 
