@@ -1,0 +1,21 @@
+#!/usr/bin/python3
+#
+# Very simple wrapper to go in /usr/bin to be executed by init script.
+# It does not have the .py extension to keep the RPM building system happy.
+#
+
+import argparse
+from automation.trigger import TriggerCLI
+
+def main(path_conf_file):
+    '''
+    Simplest possible invocation of CLOUD Automation Framework
+    '''
+    trigger = TriggerCLI(path_conf_file)
+    trigger.run()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--configfile', type=str, help='Path to the configuration file.')
+    args = parser.parse_args()
+    main(args.configfile)
