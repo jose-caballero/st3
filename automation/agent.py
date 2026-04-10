@@ -10,13 +10,14 @@ class AgentThread(threading.Thread):
     There could be more than one Agents.
     """
 
-    def __init__(self, queue):
+    def __init__(self, mgr):
         """
-        :param Queue queue: A queue that is used to fetch new requests.
+        :param ActionManager mgr: reference to the ActionManager object
+                                  that created this thread
         """
         threading.Thread.__init__(self) # init the thread
         self.stopevent = threading.Event()
-        self.queue = queue
+        self.mgr = mgr 
 
     def run(self):
         """
@@ -25,9 +26,9 @@ class AgentThread(threading.Thread):
         """
         while not self.stopevent.isSet():
             time.sleep(1)
-            if not self.queue.empty():
-                request = self.queue.get()
-                rc = request.execute()
+            request = self.mgr.get_request()
+            if request:
+                request.execute()
 
     def join(self,timeout=None):
         """

@@ -10,8 +10,8 @@ class ActionManager:
     
 
     def __init__(self):
-        self.queue = queue.Queue()
-        self.harvest_thread = HarvestThread(self.queue)
+        self.requests_dispatcher = queue.Queue()
+        self.harvest_thread = HarvestThread(self)
         self.create_agent_threads()
 
 
@@ -23,7 +23,7 @@ class ActionManager:
         n_agents = 3 
         # FIXME n_agents should be set in a config file
         for i in range(n_agents):
-            self.agent_l.append(AgentThread(self.queue))
+            self.agent_l.append(AgentThread(self))
 
 
     def run(self):
@@ -59,5 +59,18 @@ class ActionManager:
         for agent in self.agent_l:
             agent.join()
 
+    def put_request(self, request):
+        """
+        add a request to the queue
+        """
+        self.requests_dispatcher.put(request)
 
-
+    def get_request(self):
+        """
+        get a request from the queue
+        """
+        if not self.requests_dispatcher.empty():
+            request = self.requests_dispatcher.get()
+            return request
+        else:
+            return None

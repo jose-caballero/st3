@@ -8,7 +8,7 @@ class TriggerCLI:
     class to start the daemon that handle Requests
     for Actions
     """
-    def __init__(self, conf_path):
+    def __init__(self):
         self.actionmanager = ActionManager()
 
     def run(self):

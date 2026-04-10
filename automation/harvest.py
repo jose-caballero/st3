@@ -8,13 +8,14 @@ class HarvestThread(threading.Thread):
     thread checking if there are request for Actions and put them in the pipe,
     """
 
-    def __init__(self, queue):
+    def __init__(self, mgr):
         """
-        :param Queue queue: A queue that is used to fetch new requests.
+        :param ActionManager mgr: reference to the ActionManager object
+                                  that created this thread
         """
         threading.Thread.__init__(self) # init the thread
         self.stopevent = threading.Event()
-        self.queue = queue
+        self.mgr = mgr 
 
     def run(self):
         """
@@ -25,7 +26,7 @@ class HarvestThread(threading.Thread):
             time.sleep(1)
             requests = self._find_new_requests()
             for request in requests:
-                self.queue.put(request)
+                self.mgr.put_request(request)
     
     def join(self,timeout=None):
         """
