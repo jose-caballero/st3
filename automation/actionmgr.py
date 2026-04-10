@@ -63,6 +63,7 @@ class ActionManager:
         """
         add a request to the queue
         """
+        request.set_queued()
         self.requests_dispatcher.put(request)
 
     def get_request(self):

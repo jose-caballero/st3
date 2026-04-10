@@ -2,6 +2,7 @@
 
 import threading
 import time
+from requestshandler import RequestsManager
 
 class HarvestThread(threading.Thread):
     """
@@ -16,6 +17,7 @@ class HarvestThread(threading.Thread):
         threading.Thread.__init__(self) # init the thread
         self.stopevent = threading.Event()
         self.mgr = mgr 
+        self.requests_mgr = RequestsManager()
 
     def run(self):
         """
@@ -36,4 +38,9 @@ class HarvestThread(threading.Thread):
         self.stopevent.set()
         threading.Thread.join(self, timeout)
 
-
+    def _find_new_requests(self):
+        """
+        find all new requests to be inserted in the queue
+        """
+        new_requests = self.requests_mgr.get_idle()
+        return new_requests

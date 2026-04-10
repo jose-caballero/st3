@@ -28,7 +28,13 @@ class AgentThread(threading.Thread):
             time.sleep(1)
             request = self.mgr.get_request()
             if request:
-                request.execute()
+                request.set_running()
+                try:
+                    request.execute()
+                    request.set_done()
+                except Exception as ex:
+                    request.set_error()
+                
 
     def join(self,timeout=None):
         """
