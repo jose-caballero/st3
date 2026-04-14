@@ -66,6 +66,7 @@ class ActionFormView(FlaskAppBase):
             action_name=self.metadata.get('name', action_name),
             description=self.metadata.get('description', ''),
             params=self.metadata.get('parameters', {}),
+            enabled=self.metadata.get('enabled', True),  # Pass the enabled flag
             result=None,
             user=self.user
         )
@@ -78,9 +79,12 @@ class ActionFormView(FlaskAppBase):
         if not self._authorised_form():
             return "You do not have required authorisations for this action", 403
 
+        # Guard clause: prevent execution if action is disabled
+        if not self.metadata.get('enabled', True):
+            return "This action is currently disabled and cannot be executed.", 400
+
         params = self.metadata.get('parameters', {})
         result = None
-
 
         try:
             from run import run
@@ -89,15 +93,10 @@ class ActionFormView(FlaskAppBase):
             #payload['_triggered_by'] = self.user['username']
             result = run(payload)
 
-
             action_name = self.metadata.get('name', action_name)
             username = self.user['username']
             req = RequestHandler()
             req.create(action_name, payload, username)
-
-
-
-
 
         except Exception as e:
             result = {"status": "error", "message": str(e)}
@@ -108,6 +107,7 @@ class ActionFormView(FlaskAppBase):
             action_name=self.metadata.get('name', action_name),
             description=self.metadata.get('description', ''),
             params=params,
+            enabled=self.metadata.get('enabled', True), # Ensure flag remains in the view after POST
             result=result,
             # result_html=result_html,
             user=self.user
