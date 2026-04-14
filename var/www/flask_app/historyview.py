@@ -17,7 +17,8 @@ class HistoryView(FlaskAppBase):
                 history_data.append({
                     "action": d.action,
                     "user": d.user,
-                    "status": d.status
+                    "status": d.status,
+                    "request_id": d.request_id # Include request_id for the link
                 })
             except (FileNotFoundError, KeyError, Exception):
                 # Handle cases where a file might be deleted or corrupted during read
@@ -41,3 +42,14 @@ class HistoryView(FlaskAppBase):
             current_order=sort_order,
             user=self.user
         )
+
+class RequestDetailView(FlaskAppBase):
+    def get(self, request_id):
+        requests_manager = RequestsManager()
+        req_handler = requests_manager.get_by_id(request_id)
+        if not req_handler:
+            abort(404)
+
+        # Access the raw dictionary from the Data object
+        data = req_handler.data.data
+        return render_template('request_detail.html', req=data, user=self.user)

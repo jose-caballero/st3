@@ -160,4 +160,11 @@ class RequestsManager:
         req_l += self.get_error()
         return req_l
 
+    def get_by_id(self, request_id):
+        """Finds a request by ID by checking all status subdirectories."""
+        for status in ['idle', 'queued', 'running', 'done', 'error']:
+            path = f"/var/www/flask_app/requests/{status}/{request_id}"
+            if os.path.exists(path):
+                return RequestHandler(request_id, status)
+        return None
 
