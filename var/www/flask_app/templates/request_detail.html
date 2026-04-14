@@ -1,4 +1,24 @@
 <!DOCTYPE html>
+
+<style>
+    /* Force tables inside the output-content area to have borders and padding */
+    .output-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+    }
+    .output-content table, 
+    .output-content th, 
+    .output-content td {
+        border: 1px solid #dee2e6 !important; /* This mimics Bootstrap's border color */
+        padding: 8px;
+    }
+    .output-content th {
+        background-color: #f8f9fa;
+    }
+</style>
+
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -46,10 +66,11 @@
                         
                         <tr class="table-light"><th>Standard Error (stderr)</th></tr>
                         <tr><td><pre class="mb-0 text-danger">{{ req.stderr }}</pre></td></tr>
+
                         
                         <tr class="table-light"><th>Final Result (output)</th></tr>
                         <tr><td>
-                            <div class="border p-2 rounded bg-white">
+		            <div class="border p-3 rounded bg-white output-content">
                                 {{ req.output | safe }}
                             </div>
                         </td></tr>
