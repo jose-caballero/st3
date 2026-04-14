@@ -8,8 +8,6 @@
     <style>
         body { background-color: #f8f9fa; padding-top: 50px; }
         .table-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); }
-        .sort-link { text-decoration: none; color: #495057; display: flex; align-items: center; justify-content: space-between; }
-        .sort-link:hover { color: #007bff; }
         .status-badge { font-size: 0.85rem; }
     </style>
 </head>
@@ -31,23 +29,10 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    {% set next_order = 'desc' if current_order == 'asc' else 'asc' %}
-                    <th scope="col">
-                        <a href="?sort=action&order={{ next_order if current_sort == 'action' else 'asc' }}" class="sort-link">
-                            Action {% if current_sort == 'action' %}{{ '▴' if current_order == 'asc' else '▾' }}{% endif %}
-                        </a>
-                    </th>
-                    <th scope="col">
-                        <a href="?sort=user&order={{ next_order if current_sort == 'user' else 'asc' }}" class="sort-link">
-                            User {% if current_sort == 'user' %}{{ '▴' if current_order == 'asc' else '▾' }}{% endif %}
-                        </a>
-                    </th>
-                    <th scope="col">
-                        <a href="?sort=status&order={{ next_order if current_sort == 'status' else 'asc' }}" class="sort-link">
-                            Status {% if current_sort == 'status' %}{{ '▴' if current_order == 'asc' else '▾' }}{% endif %}
-                        </a>
-                    </th>
-		    <th scope="col" class="text-end">Details</th>
+                    <th scope="col">Action</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-end">Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,11 +57,10 @@
                             <i class="bi bi-eye"></i> View
                         </a>
                     </td>
-
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="3" class="text-center text-muted py-4">No history records found.</td>
+                    <td colspan="4" class="text-center text-muted py-4">No history records found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
