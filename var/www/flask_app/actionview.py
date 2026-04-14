@@ -10,6 +10,12 @@ import yaml
 def cast_types(form_data, params_metadata):
     casted_data = {}
     for key, meta in params_metadata.items():
+
+        # If the parameter is immutable, ignore form_data and use the default value
+        if meta.get('immutable'):
+            casted_data[key] = meta.get('default')
+            continue
+
         val = form_data.get(key)
         if meta.get('type') == 'boolean':
             casted_data[key] = True if val == 'on' else False

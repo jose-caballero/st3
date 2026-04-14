@@ -63,40 +63,43 @@
 
                     <form action="/form/{{ action_name }}" method="POST">
                         {% for key, meta in params.items() %}
-                        <div class="mb-4">
-                            <label for="{{ key }}" class="form-label">
-                                {{ key }}
-                                {% if meta.required %}<span class="required-asterisk">*</span>{% endif %}
-                            </label>
+			    {# Only render the field if it is NOT immutable #}
+			    {% if not meta.immutable %}
+                            <div class="mb-4">
+                                <label for="{{ key }}" class="form-label">
+                                    {{ key }}
+                                    {% if meta.required %}<span class="required-asterisk">*</span>{% endif %}
+                                </label>
 
-                            {# CASE 1: ENUM (Dropdown) #}
-                            {% if meta.enum %}
-                                <select class="form-select" id="{{ key }}" name="{{ key }}" {% if meta.required %}required{% endif %}>
-                                    <option value="" disabled {{ 'selected' if not meta.default }}>-- Select an option --</option>
-                                    {% for choice in meta.enum %}
-                                        <option value="{{ choice }}" {{ 'selected' if meta.default == choice }}>{{ choice }}</option>
-                                    {% endfor %}
-                                </select>
+                                {# CASE 1: ENUM (Dropdown) #}
+                                {% if meta.enum %}
+                                    <select class="form-select" id="{{ key }}" name="{{ key }}" {% if meta.required %}required{% endif %}>
+                                        <option value="" disabled {{ 'selected' if not meta.default }}>-- Select an option --</option>
+                                        {% for choice in meta.enum %}
+                                            <option value="{{ choice }}" {{ 'selected' if meta.default == choice }}>{{ choice }}</option>
+                                        {% endfor %}
+                                    </select>
 
-                            {# CASE 2: BOOLEAN (Checkbox) #}
-                            {% elif meta.type == 'boolean' %}
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="{{ key }}" name="{{ key }}" 
-                                           {% if meta.default == True %}checked{% endif %}>
-                                    <label class="form-check-label text-muted" for="{{ key }}">Toggle to enable</label>
-                                </div>
+                                {# CASE 2: BOOLEAN (Checkbox) #}
+                                {% elif meta.type == 'boolean' %}
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="{{ key }}" name="{{ key }}" 
+                                               {% if meta.default == True %}checked{% endif %}>
+                                        <label class="form-check-label text-muted" for="{{ key }}">Toggle to enable</label>
+                                    </div>
 
-                            {# CASE 3: STRING/DEFAULT (Text Input) #}
-                            {% else %}
-                                <input type="text" class="form-control" id="{{ key }}" name="{{ key }}" 
-                                       value="{{ meta.default if meta.default is not none else '' }}"
-                                       {% if meta.required %}required{% endif %}>
-                            {% endif %}
+                                {# CASE 3: STRING/DEFAULT (Text Input) #}
+                                {% else %}
+                                    <input type="text" class="form-control" id="{{ key }}" name="{{ key }}" 
+                                           value="{{ meta.default if meta.default is not none else '' }}"
+                                           {% if meta.required %}required{% endif %}>
+                                {% endif %}
 
-                            {% if meta.description %}
-                                <div class="form-text" style="white-space: pre-line;">{{ meta.description }}</div>
-                            {% endif %}
-                        </div>
+                                {% if meta.description %}
+                                    <div class="form-text" style="white-space: pre-line;">{{ meta.description }}</div>
+                                {% endif %}
+                            </div>
+			    {% endif %}
                         {% endfor %}
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
