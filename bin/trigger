@@ -6,7 +6,7 @@
 
 from automation.trigger import TriggerCLI
 
-def main(path_conf_file):
+def main():
     '''
     Simplest possible invocation of CLOUD Automation Framework
     '''
