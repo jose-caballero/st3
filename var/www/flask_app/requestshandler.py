@@ -96,6 +96,34 @@ class RequestHandler:
         json.dump(data, open(queued_filename, "w"))
         os.remove(idle_filename)
 
+    def execute(self):
+        lib_entry_point = self.data.data['payload']['lib_entry_point']
+        from importlib import import_module
+        module, fn_name = lib_entry_point.rsplit(".", 1)
+        action_module = import_module(module)
+        action_func = getattr(action_module, fn_name)
+
+        # to catch the stdout and stderr
+        import io
+        from contextlib import redirect_stdout, redirect_stderr
+        out_buffer = io.StringIO()
+        err_buffer = io.StringIO()
+        with redirect_stdout(out_buffer), redirect_stderr(err_buffer):
+
+            # to connect to OpenStack
+            from apis.openstack_api.openstack_connection import OpenstackConnection
+            with OpenstackConnection(self.data.data['payload']["cloud_account"]) as conn:
+                output = action_func(conn, self.data.data)
+        stdout_messages = out_buffer.getvalue()
+        stderr_messages = err_buffer.getvalue()
+
+        running_filename = f"/var/www/flask_app/requests/running/{self.request_id}"
+        data = json.load(open(running_filename))
+        data['stdout'] = stdout_messages.strip()
+        data['stderr'] = stderr_messages.strip()
+        data['output'] = output
+        json.dump(data, open(running_filename, "w"))
+
 
 class RequestHandlerList(list):
 
@@ -167,4 +195,18 @@ class RequestsManager:
             if os.path.exists(path):
                 return RequestHandler(request_id, status)
         return None
+
+
+if __name__ == '__main__':
+
+    m = RequestsManager()
+    l = m.get_all()
+    for r in l:
+        data = r.data
+        print(data.request_id)
+        print(data.user)
+        print(data.status)
+        print(data.action)
+        print("-----")
+    
 

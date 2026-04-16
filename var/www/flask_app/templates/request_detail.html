@@ -55,41 +55,45 @@
     </div>
 
     {% if req.status in ['done', 'error'] %}
-    <div class="row">
-        <div class="col-12 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">Execution Output</h5>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-bordered mb-0">
-                        <tbody>
-                            <tr>
-                                <th class="bg-light text-nowrap" style="width: 200px;">Standard Output</th>
-                                <td class="p-0">
-                                    <pre class="m-0 p-3 border-0 bg-transparent">{{ req.stdout }}</pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="bg-light text-nowrap">Standard Error</th>
-                                <td class="p-0">
-                                    <pre class="m-0 p-3 border-0 bg-transparent text-danger">{{ req.stderr }}</pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="bg-light text-nowrap">Final Result</th>
-                                <td class="p-3">
-                                    <div class="output-content">
-                                        {{ req.output | safe }}
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Execution Output</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-bordered mb-0">
+                    <tbody>
+                        <tr>
+                            <th class="bg-light text-nowrap" style="width: 200px;">Standard Output</th>
+                            <td class="p-0">
+                                <pre class="m-0 p-3 border-0 bg-transparent">{{ req.stdout }}</pre>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th class="bg-light text-nowrap">Standard Error</th>
+                            <td class="p-0">
+                                <pre class="m-0 p-3 border-0 bg-transparent text-danger">{{ req.stderr }}</pre>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="bg-light text-nowrap">Final Result</th>
+                            <td class="p-3">
+                                <div class="output-content">
+                                    {{ req.output | safe }}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
+
     {% endif %}
 </div>
 </body>

@@ -4,8 +4,7 @@ def run(data):
     :param data: Dictionary of parsed parameters
     :return: String or Dictionary result
     """
-    # Simulate processing
-    print(f"DEBUG: Received payload: {data}")
+
     return {
         "status": "success",
         "message": "Action executed successfully via run.py",
