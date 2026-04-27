@@ -108,12 +108,16 @@ class RequestHandler:
         from contextlib import redirect_stdout, redirect_stderr
         out_buffer = io.StringIO()
         err_buffer = io.StringIO()
-        with redirect_stdout(out_buffer), redirect_stderr(err_buffer):
-
-            # to connect to OpenStack
-            from apis.openstack_api.openstack_connection import OpenstackConnection
-            with OpenstackConnection(self.data.data['payload']["cloud_account"]) as conn:
-                output = action_func(conn, self.data.data)
+        output = None
+        exception_info = None
+        try:
+            with redirect_stdout(out_buffer), redirect_stderr(err_buffer):
+                # to connect to OpenStack
+                from apis.openstack_api.openstack_connection import OpenstackConnection
+                with OpenstackConnection(self.data.data['payload']["cloud_account"]) as conn:
+                    output = action_func(conn, self.data.data)
+        except Exception as ex:
+            exception_info = traceback.format_exc()
         stdout_messages = out_buffer.getvalue()
         stderr_messages = err_buffer.getvalue()
 
@@ -122,6 +126,7 @@ class RequestHandler:
         data['stdout'] = stdout_messages.strip()
         data['stderr'] = stderr_messages.strip()
         data['output'] = output
+        data['exceptions'] = exception_info
         json.dump(data, open(running_filename, "w"))
 
 
